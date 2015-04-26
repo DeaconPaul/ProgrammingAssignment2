@@ -11,45 +11,40 @@
 ## This function creates a matrix of functions and the objects for the original and inversed matrices
 ## The matrix of functions are called by the caching function (below)
 
-## In this code I took three diversions from the course example/suggestion.
-## 1) I made the original and inverse matrix objects explicit
-## 2) I creted an additional function to invert the original matrix
-## 3) I changed most of the object names to more explicity stae their purpose
-
-makeCacheMatrix <- function(matrixIN = matrix()) {
+makeCacheMatrix <- function(mtrix = matrix()) {
     
+    # insure the inverse matrix is initialized
+        inverseMtrix <- NULL
+        
     # function to initialize the matrices
-        initMatrixData <- function(matrixIN) {
-            matrixData <<- matrixIN
-            inverseData <<- NULL
+        initMtrix <- function(matrixData) {
+            mtrix <<- matrixData
+            inverseMtrix <<- NULL
         }
     
-    # call the function to do the intialization
-        initMatrixData(matrixIN)
-    
-    # function to retrieve the original matrix
-        getMatrixData <- function() matrixData
+    # function to retrieve the matrix
+        getMtrix <- function() mtrix
     
     # function to set the inverse matrix to some data
-        setInverseMatrix <- function(inverseData) {
-            inverseData <<- inverseData
+        setInverse <- function(inverseData) {
+            inverseMtrix <<- inverseData
         }
     
     # function to retrieve the inverse matrix
-        getInverseData <- function() inverseData
+        getInverse <- function() inverseMtrix
     
     # function to creteae (solve) the inverse from the original matrix
-        solveMatrixData <- function(dataToSolve) {
-            inverseData <<- solve(dataToSolve)
+        solveMtrix <- function(dataToSolve) {
+            inverseMtrix <<- solve(dataToSolve)
         }
     
     # return a list of the functions
         list(
-            initMatrixData = initMatrixData,
-            getMatrixData = getMatrixData,
-            setInverseMatrix = setInverseMatrix,
-            getInverseData = getInverseData,
-            solveMatrixData = solveMatrixData
+            initMtrix = initMtrix,
+            getMtrix = getMtrix,
+            setInverse = setInverse,
+            getInverse = getInverse,
+            solveMtrix = solveMtrix
         )
 }
 ## ------------------------------------------------------------------------------------------------------
@@ -63,10 +58,10 @@ makeCacheMatrix <- function(matrixIN = matrix()) {
 ## This function creates a matrix of functions and the objects for the original and inversed matrices
 ## The matrix of functions are called by the caching function (below)
 
-cacheSolve <- function(listOfFuncs, ...) {
+cacheSolve <- function(funcs, ...) {
     
     # retreve the current inverse data matrix
-        inverseData <- listOfFuncs$getInverseData()
+        inverseData <- funcs$getInverse()
     
     # if the original matrix has already been solved - return the cached result
         if(!is.null(inverseData)) {
@@ -75,5 +70,5 @@ cacheSolve <- function(listOfFuncs, ...) {
         }
     
     # solve the original matrix (the inverse will be cached) and return the result
-        return((listOfFuncs$solveMatrixData(listOfFuncs$getMatrixData())))
+        return( funcs$solveMtrix ( funcs$getMtrix() ) )
 }
